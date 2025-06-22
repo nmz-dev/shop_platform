@@ -11,24 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('products', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->text('description')->nullable();
-        $table->decimal('price', 10, 2);
-        $table->integer('discount')->default(0); 
-        $table->string('pics')->nullable(); 
-        $table->string('video')->nullable();
-        $table->string('types')->nullable(); 
-        $table->string('colours')->nullable();
-        $table->unsignedBigInteger('shop_id');
-
-        $table->dateTime('created_at');  
-
-        $table->dateTime('updated_at')->nullable();
-
-        $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
-    });
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
+            $table->integer('discount')->default(0);
+            $table->string('pics')->nullable();
+            $table->string('video')->nullable();
+            $table->string('types')->nullable();
+            $table->string('colors')->nullable();
+            $table->foreignId('shop_id');
+            $table->timestamps();
+        });
     }
 
     /**

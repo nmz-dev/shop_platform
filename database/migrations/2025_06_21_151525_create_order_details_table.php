@@ -12,20 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_details', function (Blueprint $table) {
-        $table->id();
-
-        $table->unsignedBigInteger('order_id');
-        $table->string('name');
-        $table->longText('description')->nullable();
-        $table->integer('price');
-        $table->string('types')->nullable();   // comma separated types e.g. "cloth > xl,l,m,s; table > dimension"
-        $table->string('colours')->nullable(); // comma separated
-
-        $table->timestamps();
-
-        // Foreign key constraint
-        $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-    });
+            $table->id();
+            $table->string('name');
+            $table->longText('description')->nullable();
+            $table->integer('price');
+            $table->string('types')->nullable();   // comma separated types e.g. "cloth > xl,l,m,s; table > dimension"
+            $table->string('colors')->nullable(); // comma separated
+            $table->foreignId('order_id');
+            $table->timestamps();
+        });
     }
 
     /**

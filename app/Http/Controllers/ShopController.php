@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ShopStoreRequest;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,8 @@ class ShopController extends Controller
      */
     public function index()
     {
-        //
+        $shop = auth()->user()->shop;
+        return view('pages.shop_owner.shop.index',[ 'shop' => $shop]);
     }
 
     /**
@@ -26,9 +28,11 @@ class ShopController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ShopStoreRequest $request)
     {
-        $shop = Shop::create($request->all());
+        $user = auth()->user();
+        $data = [...$request->all(), 'user_id' => $user->id];
+        $shop = Shop::create($data);
         if($shop)
             return redirect()->back()->with('success', 'Shop created successfully');
         else
@@ -54,9 +58,10 @@ class ShopController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Shop $shop)
+    public function update(Request $request)
     {
-        //
+        auth()->user()->shop()->update($request->except('_token','_method'));
+        return redirect()->back();
     }
 
     /**

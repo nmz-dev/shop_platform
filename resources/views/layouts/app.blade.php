@@ -71,6 +71,8 @@
                 </div>
             </div>
         </nav>
+{{--        Configure the sweetalert2 --}}
+        @include('sweetalert2::index')
 
         <main class="py-4">
             @yield('content')

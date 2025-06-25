@@ -19,10 +19,12 @@ return new class extends Migration
         $table->string("social_links")->nullable();
         $table->string("street")->nullable();
         $table->string("unit")->nullable();
-        $table->string("address")->nullable();
-        $table->string("postal_code")->nullable();
-        $table->string("phone")->nullable();
+        $table->string("address");
+        $table->string("postal_code");
+        $table->string("phone");
         $table->timestamps();
+
+        $table->foreignId('user_id');
     });
     }
 

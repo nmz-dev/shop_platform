@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -33,6 +34,14 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    /*
+     * Relationship to shop
+     */
+    public function shop():HasOne
+    {
+        return $this->hasOne(Shop::class);
+    }
 
     /**
      * Get the attributes that should be cast.

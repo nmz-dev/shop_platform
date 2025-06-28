@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ShopStoreRequest;
 use App\Models\Shop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ShopController extends Controller
 {
@@ -14,7 +15,7 @@ class ShopController extends Controller
     public function index()
     {
         $shop = auth()->user()->shop;
-        return view('pages.shop_owner.shop.index',[ 'shop' => $shop]);
+        return view('pages.shop_owner.shop.index', ['shop' => $shop]);
     }
 
     /**
@@ -30,13 +31,32 @@ class ShopController extends Controller
      */
     public function store(ShopStoreRequest $request)
     {
-        $user = auth()->user();
-        $data = [...$request->all(), 'user_id' => $user->id];
-        $shop = Shop::create($data);
-        if($shop)
+        $fileName = null;
+        if ($request->hasFile('profile_pic')) {
+            $fileName = $this->storeShopIamge($request->file('profile_pic'), $request->name);
+        }
+        $data = [...$request->except('_token'), 'profile_pic' => $fileName ?? ""];
+        $shop = auth()->user()->shop()->create($data);
+
+        if ($shop)
             return redirect()->back()->with('success', 'Shop created successfully');
         else
             return redirect()->back()->with('error', 'Something went wrong');
+    }
+
+    /*
+     * Store Shops profile picture into the public/shops folder
+     */
+    private function storeShopIamge($file, $shopName): string
+    {
+        // If request has a file then save the file and give the name to shop_name.extension and save in storage
+        // Escape special characters and replace spaces with underscore
+        $shopName = preg_replace('/\W+/', '', $shopName);
+
+        $preservedFileName = $shopName . "." . $file->getClientOriginalExtension(); // shope_name.png
+        // replace the request's file with the filename
+        Storage::disk('public')->putFileAs('shops/' . $shopName, $file, $preservedFileName);
+        return 'storage/shops/' . $shopName .'/'. $preservedFileName;
     }
 
     /**
@@ -60,7 +80,13 @@ class ShopController extends Controller
      */
     public function update(Request $request)
     {
-        auth()->user()->shop()->update($request->except('_token','_method'));
+        $fileName = null;
+        // If request has a file then save the file and give the name to shop_name.extension and save in storage
+        if ($request->hasFile('profile_pic')) {
+            $fileName = $this->storeShopIamge($request->file('profile_pic'), $request->name);
+        }
+        $data = [...$request->except('_token', '_method'), 'profile_pic' => $fileName ?? ""];
+        auth()->user()->shop()->update($data);
         return redirect()->back();
     }
 

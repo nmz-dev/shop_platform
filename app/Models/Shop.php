@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Shop extends Model
@@ -27,5 +28,11 @@ class Shop extends Model
     public function user():BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    // get all the products that the shop has
+    public function products():HasMany
+    {
+        return $this->hasMany(Product::class);
     }
 }

@@ -36,7 +36,7 @@
                         {{--All shop owner must have a shop before accessing the rest of the features.--}}
                         @if(auth()->user()->shop)
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('shop.index') }}">{{ __('Products') }}</a>
+                                <a class="nav-link" href="{{ route('product.index') }}">{{ __('Products') }}</a>
                             </li>
                         @endif
                     </ul>

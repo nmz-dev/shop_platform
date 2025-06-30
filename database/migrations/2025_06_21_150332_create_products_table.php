@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('types')->nullable();
             $table->string('colors')->nullable();
             $table->integer('stock')->default(0);
+            $table->foreignId('category_id');
             $table->foreignId('shop_id');
             $table->timestamps();
         });

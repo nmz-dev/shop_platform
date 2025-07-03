@@ -12,7 +12,7 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th>name</th>
-                                <th>description</th>
+                                <th>shop</th>
                                 <th>price</th>
                                 <th>discount</th>
                                 <th>pics</th>

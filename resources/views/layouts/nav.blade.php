@@ -36,8 +36,12 @@
                         {{--All shop owner must have a shop before accessing the rest of the features.--}}
                         @if(auth()->user()->shop)
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('category.index') }}">{{ __('Categories') }}</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('product.index') }}">{{ __('Products') }}</a>
                             </li>
+
                         @endif
                     </ul>
                     @endrole

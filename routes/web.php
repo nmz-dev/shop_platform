@@ -20,3 +20,6 @@ Route::group(['prefix' => 'shop'], function () {
 
 // Routes Related to products
 Route::get('/product/',[\App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
+
+// Routes Related to categories
+Route::resource('category', \App\Http\Controllers\CategoryController::class);

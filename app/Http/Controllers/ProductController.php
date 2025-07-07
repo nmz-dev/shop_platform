@@ -1,71 +1,92 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use SweetAlert2\Laravel\Swal;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the products to the shop_owner.
-     */
     public function index()
     {
-        // get the shop owner ( current logged in user)
         $user = auth()->user();
-        // retrieve shop
         $shop = $user->shop;
-
-        // get products related to the shops
-        $products = $shop->products()->paginate(10);
-        return view('pages.shop_owner.product.index', ['products' => $products]);
+        $products = $shop->products()->with(['category'])->paginate(10);
+        return view('pages.shop_owner.product.index', compact('products'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $categories = Category::all();
+
+    // Pass a new empty product instance so the form works the same as edit
+    return view('pages.shop_owner.product.create', [
+        'product' => new Product(),
+        'categories' => $categories,
+    ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        $shop = auth()->user()->shop;
+
+        $data = $request->validated();
+
+        if ($request->hasFile('pics')) {
+            $data['pics'] = $request->file('pics')->store('product_pics', 'public');
+        }
+
+        $product = $shop->products()->create($data);
+
+        if (!$product) {
+            Swal::error(['title' => 'Error', 'text' => 'Product failed to create.']);
+            return redirect()->back();
+        }
+
+        Swal::success(['title' => 'Success', 'text' => 'Product created successfully.']);
+        return redirect()->route('product.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        //
+        return view('pages.shop_owner.product.show', compact('product'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+        $categories = Category::all();
+        return view('pages.shop_owner.product.edit', compact('product', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(ProductStoreRequest $request, Product $product)
     {
-        //
+        $data = $request->validated();
+
+        if ($request->hasFile('pics')) {
+            $data['pics'] = $request->file('pics')->store('product_pics', 'public');
+        }
+
+        $product->update($data);
+
+        if (!$product) {
+            Swal::error(['title' => 'Error', 'text' => 'Product failed to update.']);
+            return redirect()->back();
+        }
+
+        Swal::success(['title' => 'Success', 'text' => 'Product updated successfully.']);
+        return redirect()->route('product.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        if (!$product->delete()) {
+            Swal::error(['title' => 'Error', 'text' => 'Product failed to delete.']);
+        } else {
+            Swal::success(['title' => 'Success', 'text' => 'Product deleted successfully.']);
+        }
+        return redirect()->back();
     }
 }

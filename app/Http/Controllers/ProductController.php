@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
@@ -42,17 +42,15 @@ class ProductController extends Controller
         $product = $shop->products()->create($data);
 
         if (!$product) {
-            Swal::error(['title' => 'Error', 'text' => 'Product failed to create.']);
-            return redirect()->back();
+            return redirect()->back()->with('error', 'Something went wrong');
         }
 
-        Swal::success(['title' => 'Success', 'text' => 'Product created successfully.']);
-        return redirect()->route('product.index');
+        return redirect()->route('product.index')->with('success', 'Product created successfully');
     }
 
     public function show(Product $product)
     {
-        return view('pages.shop_owner.product.show', compact('product'));
+        //return view('pages.shop_owner.product.show', compact('product'));
     }
 
     public function edit(Product $product)
@@ -69,24 +67,20 @@ class ProductController extends Controller
             $data['pics'] = $request->file('pics')->store('product_pics', 'public');
         }
 
-        $product->update($data);
+        $isUpdated = $product->update($data);
 
-        if (!$product) {
-            Swal::error(['title' => 'Error', 'text' => 'Product failed to update.']);
-            return redirect()->back();
+        if (!$isUpdated) {
+            return redirect()->back()->with('error', 'Something went wrong');
         }
 
-        Swal::success(['title' => 'Success', 'text' => 'Product updated successfully.']);
-        return redirect()->route('product.index');
+        return redirect()->route('product.index')->with('success', 'Product updated successfully');
     }
 
     public function destroy(Product $product)
     {
         if (!$product->delete()) {
-            Swal::error(['title' => 'Error', 'text' => 'Product failed to delete.']);
-        } else {
-            Swal::success(['title' => 'Success', 'text' => 'Product deleted successfully.']);
+            return redirect()->back()->with('error', 'Something went wrong');
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Product deleted successfully');
     }
 }

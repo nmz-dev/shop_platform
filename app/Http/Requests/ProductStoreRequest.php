@@ -7,11 +7,16 @@ use Illuminate\Foundation\Http\FormRequest;
 class ProductStoreRequest extends FormRequest
 {
     /**
+     * User must have shop_owner role
+     * User must have at least one shop
+     * User must have at least one category
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        $user = auth()->user();
+
+        return $user->hasRole('shop_owner') && $user->shop && $user->shop->categories->count() > 0;
     }
 
     /**
@@ -22,8 +27,6 @@ class ProductStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
-
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',

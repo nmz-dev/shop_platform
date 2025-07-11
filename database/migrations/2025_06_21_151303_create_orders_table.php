@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->integer('discount')->default(0);
+            $table->string('no');
+            $table->text('delivery_date')->nullable();
+            $table->decimal('remark', 10, 2);
+            $table->string('user_code')->default(0);
             $table->string('pics')->nullable();
-            $table->string('video')->nullable();
             $table->string('types')->nullable();
             $table->string('colors')->nullable();
             $table->foreignId('shop_id');

@@ -14,7 +14,7 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $shop = auth()->user()->shop;
+        $shop = auth()->user()->shop ?? null;
         return view('pages.shop_owner.shop.index', ['shop' => $shop]);
     }
 

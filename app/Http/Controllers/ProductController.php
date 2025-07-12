@@ -16,6 +16,8 @@ class ProductController extends Controller
         $shop = $user->shop;
         $products = $shop->products()->with(['category'])->paginate(10);
         return view('pages.shop_owner.product.index', compact('products'));
+
+       
     }
 
     public function create()

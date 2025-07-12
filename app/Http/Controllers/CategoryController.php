@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use SweetAlert2\Laravel\Swal;
 
 class CategoryController extends Controller
 {
@@ -33,17 +32,12 @@ class CategoryController extends Controller
     public function store(CategoryStoreRequest $request)
     {
         $category = auth()->user()->shop->categories()->create($request->validated());
+
         if (!$category) {
-            Swal::error([
-                'title' => 'Error',
-                'text' => 'Category failed to create.'
-            ]);
+            return redirect()->back()->with('error', 'Category failed to create.');
         }
-        Swal::success([
-            'title' => 'Success',
-            'text' => 'Category created successfully.'
-        ]);
-        return redirect()->route('category.index');
+
+        return redirect()->route('category.index')->with('success', 'Category created successfully.');
     }
 
     /**
@@ -59,7 +53,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        // You can implement edit logic here
     }
 
     /**
@@ -67,17 +61,12 @@ class CategoryController extends Controller
      */
     public function update(CategoryStoreRequest $request, Category $category)
     {
-        $category->update($request->validated());
-        if (!$category) {
-            Swal::error([
-                'title' => 'Error',
-                'text' => 'Category failed to update.'
-            ]);
+        $updated = $category->update($request->validated());
+
+        if (!$updated) {
+            return redirect()->back()->with('error', 'Category failed to update.');
         }
-        Swal::success([
-            'title' => 'Success',
-            'text' => 'Category updated successfully.'
-        ]);
+
         return redirect()->route('category.index')->with('success', 'Category updated successfully.');
     }
 
@@ -86,17 +75,10 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-
-        if(!$category->delete()){
-            Swal::error([
-                'title' => 'Error',
-                'text' => 'Category failed to delete.'
-            ]);
+        if (!$category->delete()) {
+            return redirect()->back()->with('error', 'Category failed to delete.');
         }
-        Swal::success([
-            'title' => 'Success',
-            'text' => 'Category deleted successfully.'
-        ]);
-        return redirect()->back();
+
+        return redirect()->back()->with('success', 'Category deleted successfully.');
     }
 }

@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Shop extends Model
 {
-    protected $fillable =[
+    protected $fillable = [
         "name",
         "description",
         "profile_pic",
@@ -22,22 +21,26 @@ class Shop extends Model
         "user_id"
     ];
 
-    /*
-     *Relationship to User
-     */
-    public function user():BelongsTo
+    // Relationship to User
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    // get all the products that the shop has
-    public function products():HasMany
+    // Get all the products that the shop has
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class);
     }
 
-    public function categories():HasMany
+    public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
+    }
+
+    // ✅ Add this for orders
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }

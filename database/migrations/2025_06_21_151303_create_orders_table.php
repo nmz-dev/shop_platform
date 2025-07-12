@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('pics')->nullable();
             $table->string('types')->nullable();
             $table->string('colors')->nullable();
+            $table->enum('status',['accepted', 'rejected'])->default('accepted'); // <-- Added this 
             $table->foreignId('shop_id');
             $table->timestamps();
         });

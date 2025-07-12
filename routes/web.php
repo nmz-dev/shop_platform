@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\ShopController;
-use App\Http\Controllers\ProductController; // change me 7/6
+use App\Http\Controllers\ProductController; 
 
 Route::get('/', function () {
     return view('welcome');
@@ -46,3 +47,8 @@ Route::get('/dashboard', function () {
 // Route::middleware(['auth'])->group(function () {
 //     Route::resource('product', ProductController::class);
 // });
+
+// Order Route 
+
+Route::get('order', [OrderController::class,'index'])->name('order.index');
+Route::patch('/order/{order}/reject',[OrderController::class, 'reject'])->name('order.reject'); 

@@ -1,11 +1,12 @@
 @extends('layouts.app')
+
 @section('content')
-    <div class="card shaontent')
-<div class="container"dow-sm">
+<div class="container">
+    <div class="card shadow-sm">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="mb-0">{{ __('Product List') }}</h4>
             <a href="{{ route('product.create') }}" class="btn btn-primary btn-sm">Add Product</a>
-        </div>  
+        </div>
         <div class="card-body p-0">
             @if($products->count())
                 <div class="table-responsive">
@@ -50,7 +51,11 @@
                                     @endif
                                 </td>
                                 <td>{{ $product->types ?? '-' }}</td>
-                                <td>{{ $product->colors ?? '-' }}</td>
+                                <td>
+                                    @foreach(explode(',',$product->colors) as $color)
+                                        <span class="badge" style="background-color: {{$color}}">&nbsp;</span>
+                                    @endforeach
+                                </td>
                                 <td>{{ $product->stock }}</td>
                                 <td>{{ optional($product->category)->name ?? 'Uncategorized' }}</td>
                                 <td>{{ optional($product->shop)->name ?? 'N/A' }}</td>
@@ -70,7 +75,11 @@
                     </table>
                 </div>
                 <div class="p-3">
-                    {{ $products->links() }}
+                    <div class="card-footer">
+                        <div class="container-fluid">
+                            {{$products->links()}}
+                        </div>
+                    </div>
                 </div>
             @else
                 <div class="alert alert-info text-center m-0 p-4">

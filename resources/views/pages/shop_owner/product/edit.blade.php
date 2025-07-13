@@ -14,3 +14,7 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
+    @vite('resources/js/page_owner/product/form.js')
+@endsection

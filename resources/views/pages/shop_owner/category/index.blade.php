@@ -40,7 +40,11 @@
                             </tbody>
                         </table>
                     </div>
-                    {{ $categories->links() }}
+                    <div class="card-footer">
+                        <div class="container-fluid">
+                            {{$categories->links()}}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

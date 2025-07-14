@@ -73,8 +73,14 @@
         </div>
 
         <div class="col-md-6">
-            <label for="colors">Colors</label>
-            <input type="text" id="colors" name="colors" value="{{ old('colors', $product->colors ?? '') }}" class="form-control">
+            <label for="color-picker">Colors</label>
+            <input type="hidden" id="colors" name="colors" value="{{ old('colors', $product->colors ?? '') }}"/>
+            <div id="product-colors" class="d-flex flex-wrap"></div>
+            <div class="row">
+                <input type="color" id="color-picker" class="form-control my-3"/>
+                <button class="btn btn-primary" id="add-product-color">Add</button>
+            </div>
+
             @error('colors')
                 <small class="text-danger">{{ $message }}</small>
             @enderror

@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('no');
-            $table->text('delivery_date')->nullable();
-            $table->decimal('remark', 10, 2);
-            $table->string('user_code')->default(0);
-            $table->string('pics')->nullable();
-            $table->string('types')->nullable();
-            $table->string('colors')->nullable();
-            $table->enum('status',['accepted', 'rejected'])->default('accepted'); // <-- Added this 
+            $table->foreignId('user_id');
             $table->foreignId('shop_id');
+            $table->string('order_number')->unique();
+            $table->decimal('total_amount', 10, 2);
+            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
+            $table->string('payment_status');
+            $table->text('shipping_address');
+            $table->text('billing_address');
+            $table->string('payment_method');
+            $table->string('shipping_method');
             $table->timestamps();
         });
     }

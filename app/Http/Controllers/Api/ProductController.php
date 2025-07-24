@@ -48,4 +48,81 @@ class ProductController extends Controller
         $response = new ProductCollection($products->paginate($request->limit ?? 10));
         return response()->json($response, 200);
     }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        $json = json_decode(json_encode($product));
+        return response()->json($json, 200);
+    }
+
+    public function byCategory(Request $request, $categoryId)
+    {
+        $search = $request->search;
+        $sort = $request->sort;
+        $products = Product::where('category_id', $categoryId);
+
+        if ($search) {
+            $products->where(function ($q) use($search){
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%");
+            });
+        }
+
+        switch ($sort) {
+            case 'newest':
+                $products->orderBy('created_at', 'desc');
+                break;
+            case 'price_low':
+                $products->orderBy('price');
+                break;
+            case 'price_high':
+                $products->orderBy('price', 'desc');
+                break;
+            case 'name_asc':
+                $products->orderBy('name');
+                break;
+            case 'name_desc':
+                $products->orderBy('name', 'desc');
+                break;
+        }
+
+        $response = new ProductCollection($products->paginate($request->limit ?? 10));
+        return response()->json($response, 200);
+    }
+
+    public function byShop(Request $request, $shopId)
+    {
+        $search = $request->search;
+        $sort = $request->sort;
+        $products = Product::where('shop_id', $shopId);
+
+        if ($search) {
+            $products->where(function ($q) use($search){
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%");
+            });
+        }
+
+        switch ($sort) {
+            case 'newest':
+                $products->orderBy('created_at', 'desc');
+                break;
+            case 'price_low':
+                $products->orderBy('price');
+                break;
+            case 'price_high':
+                $products->orderBy('price', 'desc');
+                break;
+            case 'name_asc':
+                $products->orderBy('name');
+                break;
+            case 'name_desc':
+                $products->orderBy('name', 'desc');
+                break;
+        }
+
+        $response = new ProductCollection($products->paginate($request->limit ?? 10));
+        return response()->json($response, 200);
+    }
 }

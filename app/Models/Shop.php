@@ -21,6 +21,10 @@ class Shop extends Model
         "user_id"
     ];
 
+    protected $casts = [
+        'social_links' => 'array',
+    ];
+
     // Relationship to User
     public function user(): BelongsTo
     {

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->longText('description')->nullable();
-            $table->integer('price');
-            $table->string('types')->nullable();   // comma separated types e.g. "cloth > xl,l,m,s; table > dimension"
-            $table->string('colors')->nullable(); // comma separated
             $table->foreignId('order_id');
+            $table->foreignId('product_id');
+            $table->string('product_name');
+            $table->integer('quantity');
+            $table->decimal('price', 10, 2);
+            $table->decimal('total', 10, 2);
             $table->timestamps();
         });
     }

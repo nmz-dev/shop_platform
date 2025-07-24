@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Product extends Model
 {
-
     protected $fillable = [
         'name',
         'description',
@@ -20,6 +19,12 @@ class Product extends Model
         'stock',
         'category_id',
         'shop_id',
+    ];
+
+    protected $casts = [
+        'pics' => 'array',
+        'types' => 'array',
+        'colors' => 'array',
     ];
 
     // a category that the current product belongs to

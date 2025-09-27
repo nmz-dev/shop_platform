@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -27,6 +28,7 @@ class User extends Authenticatable
         'user_code',
         'phone',
         'password',
+        'profile_image',
     ];
 
     /**
@@ -39,10 +41,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /*
-     * Relationship to shop
+    /**
+     * Get the user's shop
      */
-    public function shop():HasOne
+    public function shop()
+    {
+        return $this->hasOne(Shop::class);
+    }
+    
+    /**
+     * Alias for shop() for backward compatibility
+     */
+    public function shops()
     {
         return $this->hasOne(Shop::class);
     }

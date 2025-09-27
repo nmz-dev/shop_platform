@@ -25,7 +25,7 @@
         </div>
         <div class="col-md-6">
             <label for="social_links">Social Links</label>
-            <input type="text" id="social_links" name="social_links" value="{{ old('social_links', $shop->social_link ?? "") }}" class="form-control">
+            <input type="text" id="social_links" name="social_links" value="{{ old('social_links', $shop->social_links ?? "") }}" class="form-control">
         </div>
     </div>
 
@@ -54,14 +54,14 @@
     <div class="row mt-2">
         <div class="col-md-12">
             <label for="address">Address *</label>
-            <input type="text" id="address" name="address" value="{{ old('address', $shop->postal_code ?? "") }}" class="form-control" required>
+            <input type="text" id="address" name="address" value="{{ old('address', $shop->address ?? "") }}" class="form-control" required>
         </div>
     </div>
 
     <div class="mt-3">
         <small class="text-muted">All field with * are Required</small>
     </div>
-    <div class="d-grid gap-2 mt-3">
+    <div class="d-flex gap-2 mt-3">
         <button type="submit" class="btn btn-primary">Save</button>
     </div>
 </form>

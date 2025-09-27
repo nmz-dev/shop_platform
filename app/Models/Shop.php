@@ -21,9 +21,7 @@ class Shop extends Model
         "user_id"
     ];
 
-    protected $casts = [
-        'social_links' => 'array',
-    ];
+    // Note: keep social_links as a plain string to avoid htmlspecialchars issues in forms
 
     // Relationship to User
     public function user(): BelongsTo

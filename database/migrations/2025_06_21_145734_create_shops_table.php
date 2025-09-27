@@ -22,9 +22,14 @@ return new class extends Migration
         $table->string("address");
         $table->string("postal_code");
         $table->string("phone");
+        $table->unsignedBigInteger('user_id');
         $table->timestamps();
 
-        $table->foreignId('user_id');
+        // Add foreign key constraint
+        $table->foreign('user_id')
+              ->references('id')
+              ->on('users')
+              ->onDelete('cascade');
     });
     }
 

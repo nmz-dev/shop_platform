@@ -14,18 +14,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create the necessary roles for system start-up
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'shop_owner']);
-        Role::create(['name' => 'customer']);
+        // Seed roles and permissions first
+        $this->call([
+            RolePermissionSeeder::class,
+            CategorySeeder::class,
+            RolesSeeder::class,
+            AdminUserSeeder::class,
+            ShopProductSeeder::class,
+
+            
+        ]);
+
+        // Create admin user first
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('admin123'),
+                'phone' => '1234567890',
+                'email_verified_at' => now(),
+            ]
+        );
+        $admin->assignRole('admin');
 
         // Create fake 10 users
         User::factory(10)->create(); // running database > factories > UserFactory.php
-        $users = User::all();
+        $users = User::where('email', '!=', 'admin@example.com')->get();
 
-        // Assign random roles to created users
+        // Assign random roles to created users (excluding admin)
         $users->each(function ($user) {
-            $user->assignRole(Role::all()->random(1)->first()->name);
+            $roles = ['admin', 'customer'];
+            $user->assignRole($roles[array_rand($roles)]);
         });
     }
 }

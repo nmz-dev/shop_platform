@@ -16,12 +16,8 @@ class ShopStoreRequest extends FormRequest
     {
         $user = auth()->user();
 
-        // User must have only one shop
-        // And user must have shop_owner role
-        if($user->shop || !$user->hasRole('shop_owner')){
-            return false;
-        }
-        return true;
+        // User must have admin role (can have multiple shops)
+        return $user && $user->hasRole('admin');
     }
 
     /**

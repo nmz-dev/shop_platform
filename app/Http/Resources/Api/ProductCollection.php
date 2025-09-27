@@ -9,6 +9,13 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class ProductCollection extends ResourceCollection
 {
     /**
+     * The resource that this resource collects.
+     *
+     * @var string
+     */
+    public $collects = ProductResource::class;
+
+    /**
      * Transform the resource collection into an array.
      *
      * @return array<int|string, mixed>
@@ -17,9 +24,12 @@ class ProductCollection extends ResourceCollection
     {
         return [
             'products' => $this->collection,
-            'total' => Product::count(),
-            'current_page' => $request->page,
-            'limit' => $request->limit,
+            'total' => $this->resource->total(),
+            'current_page' => $this->resource->currentPage(),
+            'per_page' => $this->resource->perPage(),
+            'last_page' => $this->resource->lastPage(),
+            'from' => $this->resource->firstItem(),
+            'to' => $this->resource->lastItem(),
         ];
     }
 }

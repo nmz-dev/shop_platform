@@ -27,24 +27,36 @@
                         </li>
                     @endif
                 @else
-                    <!-- Left Side Of Navbar -->
-                    @role('shop_owner')
+
+                    @role('admin')
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('shop.index') }}">{{ __('Shop') }}</a>
+                            <a class="nav-link" href="{{ route('shop-owner.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-1"></i>{{ __('Dashboard') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('shop.index') }}">
+                                <i class="fas fa-store me-1"></i>{{ __('Shop') }}
+                            </a>
                         </li>
                         {{--All shop owner must have a shop before accessing the rest of the features.--}}
                         @if(auth()->user()->shop)
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('category.index') }}">{{ __('Categories') }}</a>
+                                <a class="nav-link" href="{{ route('category.index') }}">
+                                    <i class="fas fa-tags me-1"></i>{{ __('Categories') }}
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('product.index') }}">{{ __('Products') }}</a>
+                                <a class="nav-link" href="{{ route('product.index') }}">
+                                    <i class="fas fa-box me-1"></i>{{ __('Products') }}
+                                </a>
                             </li>
                              <li class="nav-item">
-                                <a class="nav-link" href="{{ route('order.index') }}">{{ __('Orders') }}</a>
+                                <a class="nav-link" href="{{ route('order.index') }}">
+                                    <i class="fas fa-shopping-cart me-1"></i>{{ __('Orders') }}
+                                </a>
                             </li>
-
                         @endif
                     </ul>
                     @endrole
@@ -55,10 +67,14 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('shop-owner.profile.index') }}">
+                                <i class="fas fa-user me-2"></i>{{ __('Profile') }}
+                            </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
+                                <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

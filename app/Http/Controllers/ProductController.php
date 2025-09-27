@@ -6,42 +6,77 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use SweetAlert2\Laravel\Swal;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
+        
+        // Admin can see all products
+        if ($user->hasRole('admin')) {
+            $products = Product::with(['category', 'shop'])->paginate(40);
+            return view('pages.shop_owner.product.index', compact('products'));
+        }
+        
+        // Shop owner can only see their products
         $shop = $user->shop;
-        $products = $shop->products()->with(['category'])->paginate(10);
+        
+        if (!$shop) {
+            return redirect()->route('shop.index')->with('error', 'You need to create a shop first before managing products.');
+        }
+        
+        $products = $shop->products()->with(['category'])->paginate(40);
         return view('pages.shop_owner.product.index', compact('products'));
-
-       
     }
 
     public function create()
     {
         $categories = Category::all();
+        $shops = \App\Models\Shop::all();
 
-    // Pass a new empty product instance so the form works the same as edit
-    return view('pages.shop_owner.product.create', [
-        'product' => new Product(),
-        'categories' => $categories,
-    ]);
+        // Pass a new empty product instance so the form works the same as edit
+        return view('pages.shop_owner.product.create', [
+            'product' => new Product(),
+            'categories' => $categories,
+            'shops' => $shops,
+        ]);
     }
 
     public function store(ProductStoreRequest $request)
     {
-        $shop = auth()->user()->shop;
+        $user = Auth::user();
+        
+        // Admin users need to specify shop_id in the request
+        if ($user->hasRole('admin')) {
+            $data = $request->validated();
+            if ($request->hasFile('pics')) {
+                $file = $request->file('pics');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('storage/product_pics'), $filename);
+                $data['pics'] = 'product_pics/' . $filename;
+            }
+            $product = Product::create($data);
+        } else {
+            // Shop owner creates products for their shop
+            $shop = $user->shop;
+            
+            if (!$shop) {
+                return redirect()->route('shop.index')->with('error', 'You need to create a shop first before adding products.');
+            }
 
-        $data = $request->validated();
+            $data = $request->validated();
 
-        if ($request->hasFile('pics')) {
-            $data['pics'] = $request->file('pics')->store('product_pics', 'public');
+            if ($request->hasFile('pics')) {
+                $file = $request->file('pics');
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('storage/product_pics'), $filename);
+                $data['pics'] = 'product_pics/' . $filename;
+            }
+
+            $product = $shop->products()->create($data);
         }
-
-        $product = $shop->products()->create($data);
 
         if (!$product) {
             return redirect()->back()->with('error', 'Something went wrong');
@@ -58,7 +93,8 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::all();
-        return view('pages.shop_owner.product.edit', compact('product', 'categories'));
+        $shops = \App\Models\Shop::all();
+        return view('pages.shop_owner.product.edit', compact('product', 'categories', 'shops'));
     }
 
     public function update(ProductStoreRequest $request, Product $product)
@@ -66,7 +102,10 @@ class ProductController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('pics')) {
-            $data['pics'] = $request->file('pics')->store('product_pics', 'public');
+            $file = $request->file('pics');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('storage/product_pics'), $filename);
+            $data['pics'] = 'product_pics/' . $filename;
         }
 
         $isUpdated = $product->update($data);

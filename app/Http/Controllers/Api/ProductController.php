@@ -15,7 +15,10 @@ class ProductController extends Controller
         $sort = $request->sort; // newest, price_low, price_high, name_asc, name_desc
         $category = $request->category;
         $shop = $request->shop;
-        $products = Product::query();
+        
+        // Get all products with relationships
+        $products = Product::with(['category', 'shop']);
+            
         if($category){
             $products->where('category_id', $category);
         }
@@ -45,15 +48,14 @@ class ProductController extends Controller
                 $products->orderBy('name', 'desc');
                 break;
         }
-        $response = new ProductCollection($products->paginate($request->limit ?? 10));
-        return response()->json($response, 200);
+        $response = new ProductCollection($products->paginate($request->limit ?? 40));
+        return $response;
     }
 
     public function show($id)
     {
-        $product = Product::findOrFail($id);
-        $json = json_decode(json_encode($product));
-        return response()->json($json, 200);
+        $product = Product::with(['category', 'shop'])->findOrFail($id);
+        return new \App\Http\Resources\Api\ProductResource($product);
     }
 
     public function byCategory(Request $request, $categoryId)
@@ -87,8 +89,8 @@ class ProductController extends Controller
                 break;
         }
 
-        $response = new ProductCollection($products->paginate($request->limit ?? 10));
-        return response()->json($response, 200);
+        $response = new ProductCollection($products->paginate($request->limit ?? 40));
+        return $response;
     }
 
     public function byShop(Request $request, $shopId)
@@ -122,7 +124,7 @@ class ProductController extends Controller
                 break;
         }
 
-        $response = new ProductCollection($products->paginate($request->limit ?? 10));
-        return response()->json($response, 200);
+        $response = new ProductCollection($products->paginate($request->limit ?? 40));
+        return $response;
     }
 }

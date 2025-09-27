@@ -112,6 +112,26 @@
         </div>
     </div>
 
+    @if(auth()->user()->hasRole('admin'))
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <label for="shop_id">Shop *</label>
+            <select id="shop_id" name="shop_id" class="form-control" required>
+                <option value="">-- Select Shop --</option>
+                @foreach($shops as $shop)
+                    <option value="{{ $shop->id }}" {{ old('shop_id', $product->shop_id ?? '') == $shop->id ? 'selected' : '' }}>
+                        {{ $shop->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('shop_id')
+                <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
+    </div>
+    @endif
+    </div>
+
     <div class="mt-3">
         <small class="text-muted">All fields marked with * are required.</small>
     </div>

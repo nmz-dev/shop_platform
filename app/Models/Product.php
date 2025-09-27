@@ -19,13 +19,35 @@ class Product extends Model
         'stock',
         'category_id',
         'shop_id',
+        'status',
+        'is_featured',
     ];
 
     protected $casts = [
-        'pics' => 'array',
-        'types' => 'array',
-        'colors' => 'array',
+        // Remove array casts to prevent form display issues
+        // 'pics' => 'array',
+        // 'types' => 'array', 
+        // 'colors' => 'array',
+        'is_featured' => 'boolean',
     ];
+
+    // Scope to get only active products
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    // Scope to get products with stock
+    public function scopeInStock($query)
+    {
+        return $query->where('stock', '>', 0);
+    }
+
+    // Scope to get featured products
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
 
     // a category that the current product belongs to
     public function category():BelongsTo{
